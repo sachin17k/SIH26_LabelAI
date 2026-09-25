@@ -1,6 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { User, UserRole } from '../types';
-import { authService } from '../services/api';
 
 interface AuthContextType {
   user: User | null;
@@ -11,55 +10,28 @@ interface AuthContextType {
   hasRole: (roles: UserRole[]) => boolean;
 }
 
+const DEFAULT_USER: User = {
+  id: 1,
+  email: 'officer@metrology.gov.in',
+  full_name: 'Senior Metrology Inspector',
+  role: 'ADMIN',
+  badge_number: 'INSP-2026-01',
+  jurisdiction: 'Central Metrology Zone'
+};
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(localStorage.getItem('labelguard_token'));
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [user] = useState<User | null>(DEFAULT_USER);
+  const [token] = useState<string | null>('default_token');
+  const isLoading = false;
 
-  useEffect(() => {
-    const initAuth = async () => {
-      const storedToken = localStorage.getItem('labelguard_token');
-      if (storedToken) {
-        try {
-          const userData = await authService.getCurrentUser();
-          setUser(userData);
-        } catch (err) {
-          localStorage.removeItem('labelguard_token');
-          setToken(null);
-          setUser(null);
-        }
-      }
-      setIsLoading(false);
-    };
-    initAuth();
-  }, []);
+  const login = async () => {};
 
-  const login = async (credentials: { email: string; password: string }) => {
-    const data = await authService.login(credentials);
-    localStorage.setItem('labelguard_token', data.access_token);
-    setToken(data.access_token);
-    setUser({
-      id: data.user_id,
-      email: data.email,
-      full_name: data.full_name,
-      role: data.role as UserRole,
-      badge_number: data.badge_number,
-      jurisdiction: data.jurisdiction
-    });
-  };
+  const logout = () => {};
 
-  const logout = () => {
-    localStorage.removeItem('labelguard_token');
-    setToken(null);
-    setUser(null);
-    window.location.href = '/login';
-  };
-
-  const hasRole = (roles: UserRole[]): boolean => {
-    if (!user) return false;
-    return roles.includes(user.role);
+  const hasRole = (_roles: UserRole[]): boolean => {
+    return true;
   };
 
   return (

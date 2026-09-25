@@ -1,10 +1,9 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { AuthProvider } from './context/AuthContext';
 import { Navbar } from './components/common/Navbar';
 import { Sidebar } from './components/common/Sidebar';
 
-import { LoginPage } from './pages/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { InspectionsListPage } from './pages/InspectionsListPage';
 import { NewInspectionPage } from './pages/NewInspectionPage';
@@ -16,21 +15,7 @@ import { RuleManagementPage } from './pages/RuleManagementPage';
 import { LegalDocumentsPage } from './pages/LegalDocumentsPage';
 import { UsersPage } from './pages/UsersPage';
 
-const ProtectedLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user, isLoading } = useAuth();
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-slate-900">
-        <div className="w-8 h-8 border-4 border-sky-500 border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
-
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
-
+const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       <Navbar />
@@ -49,122 +34,120 @@ export const App: React.FC = () => {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          
           <Route
             path="/"
             element={
-              <ProtectedLayout>
+              <MainLayout>
                 <DashboardPage />
-              </ProtectedLayout>
+              </MainLayout>
             }
           />
           
           <Route
             path="/new-inspection"
             element={
-              <ProtectedLayout>
+              <MainLayout>
                 <NewInspectionPage />
-              </ProtectedLayout>
+              </MainLayout>
             }
           />
 
           <Route
             path="/inspections/new"
             element={
-              <ProtectedLayout>
+              <MainLayout>
                 <NewInspectionPage />
-              </ProtectedLayout>
+              </MainLayout>
             }
           />
 
           <Route
             path="/repository"
             element={
-              <ProtectedLayout>
+              <MainLayout>
                 <ProductRepositoryPage />
-              </ProtectedLayout>
+              </MainLayout>
             }
           />
 
           <Route
             path="/products"
             element={
-              <ProtectedLayout>
+              <MainLayout>
                 <ProductRepositoryPage />
-              </ProtectedLayout>
+              </MainLayout>
             }
           />
 
           <Route
             path="/rules"
             element={
-              <ProtectedLayout>
+              <MainLayout>
                 <RuleBookPage />
-              </ProtectedLayout>
+              </MainLayout>
             }
           />
 
           <Route
             path="/rules-admin"
             element={
-              <ProtectedLayout>
+              <MainLayout>
                 <RuleManagementPage />
-              </ProtectedLayout>
+              </MainLayout>
             }
           />
 
           <Route
             path="/inspections"
             element={
-              <ProtectedLayout>
+              <MainLayout>
                 <InspectionsListPage />
-              </ProtectedLayout>
+              </MainLayout>
             }
           />
 
           <Route
             path="/inspections/:id"
             element={
-              <ProtectedLayout>
+              <MainLayout>
                 <InspectionDetailPage />
-              </ProtectedLayout>
+              </MainLayout>
             }
           />
 
           <Route
             path="/products/:id/scan"
             element={
-              <ProtectedLayout>
+              <MainLayout>
                 <ProductScanPage />
-              </ProtectedLayout>
+              </MainLayout>
             }
           />
 
           <Route
             path="/products/:id"
             element={
-              <ProtectedLayout>
+              <MainLayout>
                 <ProductScanPage />
-              </ProtectedLayout>
+              </MainLayout>
             }
           />
 
           <Route
             path="/legal-documents"
             element={
-              <ProtectedLayout>
+              <MainLayout>
                 <LegalDocumentsPage />
-              </ProtectedLayout>
+              </MainLayout>
             }
           />
 
           <Route
             path="/users"
             element={
-              <ProtectedLayout>
+              <MainLayout>
                 <UsersPage />
-              </ProtectedLayout>
+              </MainLayout>
             }
           />
 
